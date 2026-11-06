@@ -41,6 +41,8 @@ h3{font:700 18px/1.2 var(--display);margin:0}
 .card{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--tomato);border-radius:14px;padding:14px 16px;margin-bottom:12px}
 .card.done{border-top-color:var(--mint)}
 .head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.ttl{display:flex;gap:10px;align-items:flex-start}
+.ico{flex:0 0 40px;height:40px;border-radius:10px;background:var(--mint-soft);display:grid;place-items:center;font-size:22px;line-height:1}
 .bud{text-align:right;white-space:nowrap}
 .bud b{font:800 18px/1.1 var(--display);font-variant-numeric:tabular-nums;display:block}
 .bud small{color:var(--muted);font-size:12px}
@@ -94,14 +96,14 @@ input{font:15px var(--body);color:var(--ink);background:var(--paper);border:2px 
 
 <script>
 const VOCI = [
-  {id:"v01", cat:"Sostenibilità ambientale", desc:"Contenitori raccolta differenziata in cartone 95 l (set da 5)", prev:199.6, qta:"4 set"},
-  {id:"v02", cat:"Sostenibilità ambientale", desc:"Piatti biodegradabili e compostabili (set da 500)", prev:46.48, qta:""},
-  {id:"v03", cat:"Sostenibilità ambientale", desc:"Bicchieri ecologici monouso 200 ml (set da 300)", prev:32.54, qta:"2 set"},
-  {id:"v04", cat:"Sostenibilità ambientale", desc:"Posate in legno (set da 50)", prev:44.8, qta:"20 set"},
-  {id:"v05", cat:"Sostenibilità ambientale", desc:"Bicchieri di vetro da degustazione serigrafati", prev:804, qta:"300 pezzi"},
-  {id:"v23", cat:"Beni e attrezzature", desc:"Magliette staff in cotone bio (set da 50)", prev:222, qta:""},
-  {id:"v24", cat:"Beni e attrezzature", desc:"Glacette in acciaio 28 l", prev:266, qta:"20 pezzi"},
-  {id:"v25", cat:"Beni e attrezzature", desc:"Sputacchiere", prev:160, qta:"20 pezzi"}
+  {id:"v01", ico:"♻️", cat:"Sostenibilità ambientale", desc:"Contenitori raccolta differenziata in cartone 95 l (set da 5)", prev:199.6, qta:"4 set"},
+  {id:"v02", ico:"🍽️", cat:"Sostenibilità ambientale", desc:"Piatti biodegradabili e compostabili (set da 500)", prev:46.48, qta:""},
+  {id:"v03", ico:"🥤", cat:"Sostenibilità ambientale", desc:"Bicchieri ecologici monouso 200 ml (set da 300)", prev:32.54, qta:"2 set"},
+  {id:"v04", ico:"🍴", cat:"Sostenibilità ambientale", desc:"Posate in legno (set da 50)", prev:44.8, qta:"20 set"},
+  {id:"v05", ico:"🍷", cat:"Sostenibilità ambientale", desc:"Bicchieri di vetro da degustazione serigrafati", prev:804, qta:"300 pezzi"},
+  {id:"v23", ico:"👕", cat:"Beni e attrezzature", desc:"Magliette staff in cotone bio (set da 50)", prev:222, qta:""},
+  {id:"v24", ico:"🧊", cat:"Beni e attrezzature", desc:"Glacette in acciaio 28 l", prev:266, qta:"20 pezzi"},
+  {id:"v25", ico:"🪣", cat:"Beni e attrezzature", desc:"Sputacchiere", prev:160, qta:"20 pezzi"}
 ];
 const KEY = "indisciplinato_fornitori_v1";
 
@@ -139,7 +141,7 @@ function cardHtml(v){
   if(!rows(v.id).length) rows(v.id).push({id:uid(), nome:"", costo:"", link:""});
   const done = rows(v.id).some(filled);
   return `<div class="card ${done?"done":""}" data-v="${v.id}">
-    <div class="head"><div><h3>${esc(v.desc)}</h3>${v.qta?`<p class="hint">${esc(v.qta)}</p>`:""}</div>
+    <div class="head"><div class="ttl"><span class="ico" aria-hidden="true">${v.ico||"📦"}</span><div><h3>${esc(v.desc)}</h3>${v.qta?`<p class="hint">${esc(v.qta)}</p>`:""}</div></div>
       <div class="bud"><b>${eur(v.prev)}</b><small>budget</small></div></div>
     <div class="rows">${rows(v.id).map(rowHtml).join("")}</div>
     <div class="foot">${footHtml(v)}</div>
