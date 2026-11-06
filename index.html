@@ -78,6 +78,7 @@ input{font:15px var(--body);color:var(--ink);background:var(--paper);border:2px 
 
 <main>
   <p class="hint intro">Per ogni voce scrivete i fornitori possibili: nome, costo totale e, se c'è, il link. Si salva da solo su questo telefono o computer: potete chiudere e tornare quando volete. Quando avete finito toccate <b>Scarica Excel</b>.</p>
+  <p class="hint intro">Voci e budget sono quelli del computo spese per Fondazione CRT: 25 voci, totale <b>7.882,22 €</b>.</p>
   <div id="list"></div>
   <div class="add">
     <input id="newT" placeholder="Manca qualcosa? Scrivi cosa serve">
@@ -95,15 +96,34 @@ input{font:15px var(--body);color:var(--ink);background:var(--paper);border:2px 
 <div class="toast" id="toast" role="status"></div>
 
 <script>
+/* Voci e budget dal computo spese Fondazione CRT (file di Pietro, ott. 2026): 25 voci, totale 7.882,22 €.
+   n = numero della voce nel computo. Le voci a 0 € non sono finanziate nel computo CRT. */
 const VOCI = [
-  {id:"v01", ico:"♻️", cat:"Sostenibilità ambientale", desc:"Contenitori raccolta differenziata in cartone 95 l (set da 5)", prev:199.6, qta:"4 set"},
-  {id:"v02", ico:"🍽️", cat:"Sostenibilità ambientale", desc:"Piatti biodegradabili e compostabili (set da 500)", prev:46.48, qta:""},
-  {id:"v03", ico:"🥤", cat:"Sostenibilità ambientale", desc:"Bicchieri ecologici monouso 200 ml (set da 300)", prev:32.54, qta:"2 set"},
-  {id:"v04", ico:"🍴", cat:"Sostenibilità ambientale", desc:"Posate in legno (set da 50)", prev:44.8, qta:"20 set"},
-  {id:"v05", ico:"🍷", cat:"Sostenibilità ambientale", desc:"Bicchieri di vetro da degustazione serigrafati", prev:804, qta:"300 pezzi"},
-  {id:"v23", ico:"👕", cat:"Beni e attrezzature", desc:"Magliette staff in cotone bio (set da 50)", prev:133.2, qta:"50 magliette"},
-  {id:"v24", ico:"🧊", cat:"Beni e attrezzature", desc:"Glacette in acciaio 28 l", prev:266, qta:"20 pezzi"},
-  {id:"v25", ico:"🪣", cat:"Beni e attrezzature", desc:"Sputacchiere", prev:160, qta:"20 pezzi"}
+  {id:"v21", n:1, ico:"🚆", cat:"Personale non dipendente · collaboratori e prestazioni professionali", desc:"Rimborso treni Asti–Torino per volontari", prev:76.8, qta:"6 biglietti A/R"},
+  {id:"v09", n:2, ico:"🤟", cat:"Personale non dipendente · collaboratori e prestazioni professionali", desc:"Interprete LIS (degustazioni e “Scienza sotto i campanili”)", prev:316, qta:""},
+  {id:"v33", n:3, ico:"🧭", cat:"Personale non dipendente · collaboratori e prestazioni professionali", desc:"Consulenza progettazione accessibile e raccordo con ENS Asti", prev:500, qta:""},
+  {id:"v27", n:4, ico:"🦺", cat:"Personale non dipendente · collaboratori e prestazioni professionali", desc:"Piano di sicurezza ed emergenza accessibile", prev:1500, qta:""},
+  {id:"v22", n:5, ico:"🍝", cat:"Personale non dipendente · collaboratori e prestazioni professionali", desc:"Pranzi e cene volontari (Rione Cattedrale)", prev:360, qta:"2 pranzi e 1 cena · 6 € a pasto"},
+  {id:"v01", n:6, ico:"♻️", cat:"Acquisto beni strumentali e attrezzature", desc:"Contenitori raccolta differenziata in cartone 95 l", prev:199.6, qta:"20 contenitori"},
+  {id:"v23", n:7, ico:"👕", cat:"Acquisto beni strumentali e attrezzature", desc:"Magliette staff in cotone bio", prev:133.2, qta:"50 magliette"},
+  {id:"v05", n:8, ico:"🍷", cat:"Acquisto beni strumentali e attrezzature", desc:"Bicchieri di vetro da degustazione (con cauzione)", prev:804, qta:"300 bicchieri"},
+  {id:"v07", n:9, ico:"📄", cat:"Acquisto beni strumentali e attrezzature", desc:"Cartoncino A4 300 g/mq per stampa in Braille", prev:27.8, qta:"2 risme"},
+  {id:"v04", n:10, ico:"🍴", cat:"Acquisto beni strumentali e attrezzature", desc:"Posate in legno FSC compostabili", prev:44.8, qta:"1000 posate"},
+  {id:"v06", n:11, ico:"🏛️", cat:"Acquisto beni strumentali e attrezzature", desc:"Materiali per la planimetria 3D tattile (Liceo Artistico Alfieri)", prev:410, qta:""},
+  {id:"v03", n:12, ico:"🥤", cat:"Acquisto beni strumentali e attrezzature", desc:"Bicchieri monouso compostabili", prev:32.54, qta:"600 bicchieri"},
+  {id:"v12", n:13, ico:"🎧", cat:"Acquisto beni strumentali e attrezzature", desc:"Materiali per il kit sensoriale", prev:300, qta:""},
+  {id:"v02", n:14, ico:"🍽️", cat:"Acquisto beni strumentali e attrezzature", desc:"Piatti monouso compostabili", prev:46.48, qta:"500 piatti"},
+  {id:"v24", n:15, ico:"🧊", cat:"Acquisto beni strumentali e attrezzature", desc:"Glacette in acciaio inox 28 l", prev:266, qta:"20 tinozze"},
+  {id:"v08", n:16, ico:"🗂️", cat:"Acquisto beni strumentali e attrezzature", desc:"Cartelli in comunicazione aumentativa (CAA) plastificati A3", prev:122, qta:"50 cartoncini"},
+  {id:"v25", n:17, ico:"🪣", cat:"Acquisto beni strumentali e attrezzature", desc:"Sputacchiere", prev:160, qta:"20 pezzi"},
+  {id:"v28", n:18, ico:"🏠", cat:"Spese di gestione", desc:"Affitto cortile di Palazzo del Michelerio", prev:176, qta:"4 giorni: 2 di evento + allestimento e smontaggio"},
+  {id:"v11", n:19, ico:"🚐", cat:"Spese per prestazioni di servizi", desc:"Trasporti sociali AUSER Asti", prev:300, qta:""},
+  {id:"v10", n:20, ico:"🎓", cat:"Spese per prestazioni di servizi", desc:"Corso di formazione volontari sull'accessibilità", prev:807, qta:""},
+  {id:"v26", n:21, ico:"📊", cat:"Spese per prestazioni di servizi", desc:"Valutazione d'impatto (ONLUS PIAM)", prev:1300, qta:""},
+  {id:"v14", n:22, ico:"📱", cat:"Comunicazione", desc:"Comunicazione social accessibile", prev:0, qta:""},
+  {id:"v15", n:23, ico:"🖨️", cat:"Comunicazione", desc:"Stampa materiale pubblicitario", prev:0, qta:"150 locandine A3 · 1.700 flyer A5 · 50 mappe A3 plastificate · 30 manifesti 70×100 · 2 striscioni 200×80 · 200 adesivi"},
+  {id:"v19", n:24, ico:"📣", cat:"Comunicazione", desc:"Campagna pubblicitaria digitale accessibile", prev:0, qta:""},
+  {id:"v29", n:25, ico:"🚻", cat:"Altre spese", desc:"Noleggio bagni chimici", prev:0, qta:"2 standard + 1 per disabili"}
 ];
 const KEY = "indisciplinato_fornitori_v1";
 
@@ -134,7 +154,7 @@ function footHtml(v){
   const rs = rows(v.id).filter(filled), costi = rs.map(r=>num(r.costo)).filter(n=>isFinite(n));
   const min = costi.length ? Math.min(...costi) : null;
   const info = !rs.length ? `<span class="chip neu">nessun fornitore</span>`
-    : `<span class="chip neu">${rs.length} ${rs.length===1?"fornitore":"fornitori"}</span>` + (min!==null ? ` <span class="chip ${min<=v.prev?"ok":"bad"}">più economico ${eur(min)}${min>v.prev?" · sopra budget":""}</span>` : "");
+    : `<span class="chip neu">${rs.length} ${rs.length===1?"fornitore":"fornitori"}</span>` + (min!==null ? ` <span class="chip ${!v.prev?"neu":min<=v.prev?"ok":"bad"}">più economico ${eur(min)}${v.prev&&min>v.prev?" · sopra budget":""}</span>` : "");
   return `<div>${info}</div><button class="btn ghost small" data-add>+ Fornitore</button>`;
 }
 function cardHtml(v){
@@ -142,7 +162,7 @@ function cardHtml(v){
   const done = rows(v.id).some(filled);
   return `<div class="card ${done?"done":""}" data-v="${v.id}">
     <div class="head"><div class="ttl"><span class="ico" aria-hidden="true">${v.ico||"📦"}</span><div><h3>${esc(v.desc)}</h3>${v.qta?`<p class="hint">${esc(v.qta)}</p>`:""}</div></div>
-      <div class="bud"><b>${eur(v.prev)}</b><small>budget</small></div></div>
+      <div class="bud"><b>${eur(v.prev)}</b><small>${v.n?`voce ${v.n} · `:""}${v.prev?"budget":"0 € nel computo CRT"}</small></div></div>
     <div class="rows">${rows(v.id).map(rowHtml).join("")}</div>
     <div class="foot">${footHtml(v)}</div>
   </div>`;
